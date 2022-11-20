@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Player implements Runnable{
     // This is a Bingo Player
     // A Bingo Player has a name
+    private static final double INITIAL_CREDITS = 100;
+    private static final double INITIAL_MONEY = 10;
     String name;
     BingoCard card;
     ArrayList<BingoCard> cards = new ArrayList<>();
@@ -15,8 +17,8 @@ public class Player implements Runnable{
 
     public Player(String name)  {
         this.name = name;
-        this.money = 0.0;
-        this.credits = 10.0;
+        this.money = INITIAL_MONEY;
+        this.credits = INITIAL_CREDITS;
     }
 
     public int[][] getCard() {
@@ -25,7 +27,8 @@ public class Player implements Runnable{
 
     public void addWin(Double prize) {
         this.gamesWon++;
-        this.money += prize;
+        this.money += prize / 2;
+        this.credits += prize / 2;
     }
 
     public void displayCard() {
@@ -40,8 +43,9 @@ public class Player implements Runnable{
 
     private void buyCredits() {
         // Buy credits
+        System.out.println("PLAYER " + this.name + " BALANCE: " + this.credits + " credits AND MONEY: " + this.money + " euros");
         // generate random even number between 2 and 10
-        int creditsToBuy = (int) (Math.random() * 5 + 1) * 2;
+        int creditsToBuy = (int) (Math.random() * 5 + 1) ;
 
         // If player has enough money, buy credits
         if (this.money >= creditsToBuy * 2) {
@@ -52,11 +56,8 @@ public class Player implements Runnable{
     }
 
     public boolean buyCard() {
-        if (this.credits <= 2 ) {
-            this.buyCredits();
-        }
         if (this.credits >= 2 ){
-            this.credits -= 0;
+            this.credits -= 2;
             this.card = new BingoCard();
             cards.add(card);
 
@@ -95,13 +96,23 @@ public class Player implements Runnable{
         // If player has enough credits, buy a card
         int affordableCards = (int) (this.credits / 2);
 
+        System.out.println("----------" + this.name + " player credits= "+ this.credits + "---------- and AFFORDABLE CARDS: " + affordableCards);
+
         // Generate a random number between 1 and 5 if affordable cards are more than 5
         int cardsToBuy = affordableCards > 5 ? (int) (Math.random() * 5 + 1) : affordableCards;
 
+        if(affordableCards == 0) {
+            return false;
+        }
+
         System.out.println("Player " + this.name + " will play " + cardsToBuy + " cards per round");
         boolean boughtCard = false;
-        for (int i = 0; i <= cardsToBuy ; i++) {
+        for (int i = 0; i < cardsToBuy ; i++) {
             boughtCard = this.buyCard();
+            if(!boughtCard && money >= 2) {
+                this.buyCredits();
+                boughtCard = this.buyCard();
+            }
         }
         return boughtCard;
     }

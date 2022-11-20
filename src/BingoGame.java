@@ -48,18 +48,15 @@ public class BingoGame implements Runnable {
         for (int i = 0; i < card.length; i++) {
             int count = 0;
             for (int j = 0; j < card[i].length; j++) {
-                    Boolean playerHasBall = player.getCheckedNumbers().contains(card[i][j]);
-                    if (Boolean.TRUE.equals(playerHasBall)) {
-                        if(++count == 5) {
-                            System.out.println("Player " + player.name + " won the game filling the row " + i);
-                            return true;
-                        }
+                Boolean playerHasBall = player.getCheckedNumbers().contains(card[i][j]);
+                if (Boolean.TRUE.equals(playerHasBall)) {
+                    if(++count == 5) {
+                        System.out.println("Player " + player.name + " won the game filling the row " + i);
+                        return true;
                     }
-                    
                 }
-                count = 0;
-            
-            
+            }
+            count = 0;
         }
 
         // Check columns
@@ -75,8 +72,6 @@ public class BingoGame implements Runnable {
                 }
                 count = 0;
             }
-            
-
         }return false;
     }
 
@@ -90,18 +85,15 @@ public class BingoGame implements Runnable {
                 extractedBalls.add(ball);
                 Thread.sleep(100);
                 bingo = notifyPlayers(ball, extractedBalls);
-                
+
                 if(extractedBalls.size() == 75){
                     System.out.println("No one won");
                     bingo = !bingo;
                 }
-
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void removePlayerFromGame(Player player) {
@@ -113,39 +105,33 @@ public class BingoGame implements Runnable {
     public void run() {
         try {
         Thread.sleep(1000);
-        
-        while(true){
-            // Start game
-            this.play();
-            
-            // Send restart new round message
-            System.out.println("New game starting in 2 seconds");
-            Thread.sleep(2000);
 
-            // Verify if each player can afford to play
-            players.forEach(player -> {
-                boolean playerKeepPlaying = player.startNewGame();
-                if(!playerKeepPlaying){
-                    removePlayerFromGame(player);
+            while(true){
+                // Start game
+                this.play();
+
+                // Send restart new round message
+                System.out.println("New game starting in 2 seconds");
+                Thread.sleep(2000);
+
+                // Verify if each player can afford to play
+                players.forEach(player -> {
+                    boolean playerKeepPlaying = player.startNewGame();
+                    if(!playerKeepPlaying){
+                        removePlayerFromGame(player);
+                    }
+                });
+
+                // Check if there are still players
+                if(players.isEmpty()){
+                    break;
                 }
-            });
 
-            // Check if there are still players
-            if(players.isEmpty()){
-                break;
+                // Restart game
+                cage.resetGame();
             }
-
-            // Restart game
-            cage.resetGame();
-
-            // Clean console
-            // System.out.print("\033[H\033[2J");
-            
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
-    } catch (Exception e) {
-        System.err.println(e.getMessage());
     }
-        
-    }
-
 }
