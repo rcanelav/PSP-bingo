@@ -137,7 +137,7 @@ public class Player implements Runnable{
         // If player has enough credits, buy a card
         int affordableCards = (int) (this.credits / 2);
         // Generate a random number between 1 and 5 if affordable cards are more than 5
-        int cardsToBuy = affordableCards >= 4 ? (int) (Math.random() * 5 + 1) : affordableCards;
+        int cardsToBuy = affordableCards >= 5 ? (int) (Math.random() * 5 + 1) : affordableCards;
 
         System.out.println("Player " + this.name + " will play " + cardsToBuy + " cards per round");
         for (int i = 0; i <= cardsToBuy ; i++) {
