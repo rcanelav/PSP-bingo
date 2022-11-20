@@ -5,7 +5,9 @@ public class App {
         Thread playerThread = new Thread(player);
         Thread playerThread2 = new Thread(player2);
         playerThread.start();
+
         playerThread2.start();
+
 
         BingoGame game = new BingoGame();
 

@@ -51,7 +51,6 @@ public class Player implements Runnable{
     }
 
     public boolean buyCard() {
-        
         if (this.credits <= 2) {
             this.buyCredits();
         }
@@ -62,7 +61,6 @@ public class Player implements Runnable{
             System.out.println("Player " + this.name + " bought a card");
             return true;
         }
-
         System.out.println("Player " + this.name + " doesn't have enough credits to buy a card");
         return false;
 
@@ -124,6 +122,4 @@ public class Player implements Runnable{
         // TODO Auto-generated method stub
         this.buyCard();
     }
-
-     
 }
